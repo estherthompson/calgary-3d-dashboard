@@ -100,25 +100,7 @@ BUILDING_ZONES = {
             }
         }
     },
-    "mission": {
-        "name": "Mission District",
-        "zones": {
-            "mission_zone_1": {
-                "name": "Mission Zone 1 - 4th Street",
-                "description": "4th Street commercial corridor",
-                "bbox": [-114.095, 51.025, -114.085, 51.030],
-                "expected_buildings": "~100 buildings",
-                "center": [-114.090, 51.0275]
-            },
-            "mission_zone_2": {
-                "name": "Mission Zone 2 - Residential",
-                "description": "Historic residential homes",
-                "bbox": [-114.095, 51.030, -114.085, 51.035],
-                "expected_buildings": "~150 buildings",
-                "center": [-114.090, 51.0325]
-            }
-        }
-    },
+
     "auburn_bay": {
         "name": "Auburn Bay",
         "zones": {
@@ -138,37 +120,8 @@ BUILDING_ZONES = {
             }
         }
     },
-    "small_test": {
-        "name": "Small Test Zones",
-        "zones": {
-            "test_zone_1": {
-                "name": "Test Zone 1 - Tiny Area",
-                "description": "Very small area for testing (fast loading)",
-                "bbox": [-114.080, 51.037, -114.078, 51.039],
-                "expected_buildings": "~20-50 buildings",
-                "center": [-114.079, 51.038]
-            },
-            "test_zone_2": {
-                "name": "Test Zone 2 - Micro Area",
-                "description": "Micro area for quick testing",
-                "bbox": [-114.082, 51.036, -114.080, 51.038],
-                "expected_buildings": "~10-30 buildings",
-                "center": [-114.081, 51.037]
-            }
-        }
-    },
-    "large_test": {
-        "name": "Large Test Zones",
-        "zones": {
-            "large_zone_1": {
-                "name": "Large Zone 1 - Downtown Core",
-                "description": "Large area covering downtown to ensure we get buildings",
-                "bbox": [-114.100, 51.020, -114.050, 51.070],
-                "expected_buildings": "~500-1000 buildings",
-                "center": [-114.075, 51.045]
-            }
-        }
-    }
+
+
 }
 
 # Default target area
