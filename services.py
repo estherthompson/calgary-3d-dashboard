@@ -49,9 +49,6 @@ BUILDING_ZONES = {
             }
         }
     }
-},
-
-
 }
 
 # Default target area
