@@ -111,6 +111,40 @@ const Dashboard = () => {
     }
   }, [username]);
 
+  // Handle loading a saved project
+  const handleLoadProject = useCallback((project) => {
+    if (!project) return;
+    
+    try {
+      // Set the current project
+      setCurrentProject(project);
+      
+      // Restore the saved filters if they exist
+      if (project.filters && project.filters.length > 0) {
+        const savedFilter = project.filters[0];
+        setInterpretedFilter(savedFilter);
+        
+        // Apply the filter to highlight buildings
+        if (savedFilter.attribute === 'height_m' && savedFilter.operator === '>') {
+          const filteredBuildings = buildings.filter(b => 
+            b.properties?.height_m && b.properties.height_m > savedFilter.value
+          );
+          setHighlightedBuildings(filteredBuildings);
+        }
+        // Add more filter types as needed
+        
+        // Set the query text
+        if (project.query_text) {
+          setQueryText(project.query_text);
+        }
+        
+        console.log(`Loaded project: ${project.name} with ${project.highlighted_count} highlighted buildings`);
+      }
+    } catch (err) {
+      console.error('Failed to load project:', err);
+    }
+  }, [buildings]);
+
   // Clear query and filters
   const handleClearQuery = useCallback(() => {
     setQueryText('');
@@ -119,13 +153,13 @@ const Dashboard = () => {
   }, []);
 
   // Handle project save
-  const handleSaveProject = useCallback(async () => {
+  const handleSaveProject = useCallback(async (projectName) => {
     if (!username || !selectedZone) return;
 
     try {
       const projectData = {
         username,
-        name: `Analysis of ${zoneData?.name || selectedZone}`,
+        name: projectName || `Analysis of ${zoneData?.name || selectedZone}`,
         description: `LLM analysis of buildings in ${zoneData?.name || selectedZone}`,
         target_area: selectedZone,
         total_buildings: buildings.length,
@@ -133,7 +167,9 @@ const Dashboard = () => {
         query_results: highlightedBuildings.map(b => ({
           id: b.id,
           properties: b.properties
-        }))
+        })),
+        filters: interpretedFilter ? [interpretedFilter] : [],
+        query_text: queryText
       };
 
       const response = await projectsAPI.saveProject(projectData);
@@ -141,10 +177,15 @@ const Dashboard = () => {
       
       // Refresh user projects
       loadUserProjects();
+      
+      // Clear the current query after saving
+      setQueryText('');
+      setInterpretedFilter(null);
+      setHighlightedBuildings([]);
     } catch (err) {
       console.error('Failed to save project:', err);
     }
-  }, [username, selectedZone, zoneData, buildings, highlightedBuildings, loadUserProjects]);
+  }, [username, selectedZone, zoneData, buildings, highlightedBuildings, interpretedFilter, queryText, loadUserProjects]);
 
   // Load projects when username changes
   useEffect(() => {
@@ -234,6 +275,7 @@ const Dashboard = () => {
             <QueryPanel 
               onSubmit={handleQuerySubmit}
               onClear={handleClearQuery}
+              onSave={handleSaveProject}
               queryText={queryText}
               setQueryText={setQueryText}
               loading={loading}
@@ -250,7 +292,7 @@ const Dashboard = () => {
               setUsername={setUsername}
               projects={userProjects}
               currentProject={currentProject}
-              onLoadProject={setCurrentProject}
+              onLoadProject={handleLoadProject}
               onSaveProject={handleSaveProject}
               canSave={!!username && buildings.length > 0}
             />

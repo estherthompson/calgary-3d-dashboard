@@ -12,6 +12,8 @@ const QueryPanel = ({
   onSave,
   canSave
 }) => {
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [projectName, setProjectName] = useState('');
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit();
@@ -110,12 +112,51 @@ const QueryPanel = ({
               Clear Filter
             </button>
             <button
-              onClick={onSave}
+              onClick={() => setShowSaveDialog(true)}
               className="save-btn"
               disabled={!canSave || loading}
             >
               Save Project
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Save Project Dialog */}
+      {showSaveDialog && (
+        <div className="save-dialog-overlay">
+          <div className="save-dialog">
+            <h4>Save Project</h4>
+            <p>Give your analysis a name to save it for later.</p>
+            <input
+              type="text"
+              placeholder="Enter project name..."
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              className="project-name-input"
+              autoFocus
+            />
+            <div className="dialog-actions">
+              <button
+                onClick={() => setShowSaveDialog(false)}
+                className="cancel-btn"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (projectName.trim()) {
+                    onSave(projectName.trim());
+                    setProjectName('');
+                    setShowSaveDialog(false);
+                  }
+                }}
+                className="confirm-save-btn"
+                disabled={!projectName.trim()}
+              >
+                Save Project
+              </button>
+            </div>
           </div>
         </div>
       )}
