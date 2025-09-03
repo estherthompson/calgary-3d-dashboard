@@ -279,11 +279,13 @@ const Dashboard = () => {
                 <div className="zone-examples">
                   <h3>Available Zones:</h3>
                   <ul>
-                    <li><strong>Downtown:</strong> Stephen Avenue, Financial District, East Village</li>
+                    <li><strong>Stephen Avenue</strong></li>
+                    <li><strong>Financial District</strong></li>
+                    <li><strong>East Village</strong></li>
                   </ul>
                 </div>
                 <p className="performance-note">
-                  <strong>Performance Note:</strong> Each zone contains only 80-180 buildings for optimal 3D rendering performance.
+                  <strong>Performance Note:</strong> Each zone contains only 2-20 buildings for optimal 3D rendering performance.
                 </p>
               </div>
             </div>

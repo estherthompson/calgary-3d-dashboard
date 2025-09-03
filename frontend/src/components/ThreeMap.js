@@ -19,7 +19,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
   const initScene = useCallback(() => {
     if (!mapRef.current) return;
 
-    console.log('Initializing simple 3D city map...');
+
 
     try {
       // Create scene
@@ -36,10 +36,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
       );
       camera.position.set(0, 300, 400);
       cameraRef.current = camera;
-      console.log('Camera created:', { 
-        position: camera.position, 
-        containerSize: { width: mapRef.current.clientWidth, height: mapRef.current.clientHeight }
-      });
+
 
       // Create renderer
       const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -55,7 +52,6 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
       
       mapRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;
-      console.log('Renderer created and canvas added:', renderer.domElement);
 
       // Create controls
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -127,7 +123,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
   const createBuildings = useCallback(() => {
     if (!buildingsGroupRef.current || !buildings || buildings.length === 0) return;
 
-    console.log(`Creating ${buildings.length} simple 3D buildings...`);
+    
 
     try {
       // Clear existing buildings
@@ -142,7 +138,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           const buildingType = props.building_type || 'unknown';
           const isHighlighted = (highlightedBuildings || []).some(hb => hb.id === building.id);
 
-          console.log(`Building ${index}: height=${height}, type=${buildingType}`);
+
 
           // Create larger, more visible buildings
           const width = 30 + Math.random() * 20; // Random width 30-50
@@ -156,14 +152,9 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
             opacity: 1.0
           });
           
-          // Add hover effect
-          material.onBeforeCompile = (shader) => {
-            shader.uniforms.time = { value: 0 };
-            shader.fragmentShader = shader.fragmentShader.replace(
-              'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
-              'gl_FragColor = vec4( outgoingLight, diffuseColor.a );'
-            );
-          };
+          // Make buildings interactive
+          material.transparent = true;
+          material.opacity = 0.9;
 
           const mesh = new THREE.Mesh(geometry, material);
           
@@ -182,27 +173,19 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           buildingsGroupRef.current.add(mesh);
           createdCount++;
 
-          console.log(`Building ${index} positioned at:`, { x, y: height / 2, z });
+
 
         } catch (error) {
-          console.warn(`Failed to create building ${index}:`, error);
+          // Silently handle building creation errors
         }
       });
 
-      console.log(`Successfully created ${createdCount} 3D buildings`);
 
-      // Position camera to view all buildings with better angle
-      if (cameraRef.current && createdCount > 0) {
-        cameraRef.current.position.set(200, 400, 500); // Higher and further back
-        if (controlsRef.current) {
-          controlsRef.current.target.set(0, 0, 0);
-          controlsRef.current.update();
-        }
-        console.log('Camera positioned to view buildings');
-      }
+
+
 
     } catch (error) {
-      console.error('Failed to create buildings:', error);
+      // Silently handle building creation errors
     }
   }, [buildings, highlightedBuildings]);
 
@@ -243,18 +226,54 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           const buildingIndex = clickedBuilding.userData.buildingIndex;
           
           if (buildingIndex !== undefined && buildings[buildingIndex]) {
-            console.log('Building clicked:', buildings[buildingIndex]);
+            console.log('Building clicked!', buildings[buildingIndex]); // Debug log
             onBuildingSelect(buildings[buildingIndex]);
           }
         }
       }
     };
 
+    const handleMouseMove = (event) => {
+      if (!mapRef.current || !isInitialized) return;
+      
+      const mouse = new THREE.Vector2();
+      const rect = mapRef.current.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, cameraRef.current);
+
+      if (buildingsGroupRef.current) {
+        const intersects = raycaster.intersectObjects(buildingsGroupRef.current.children, true);
+        
+        // Reset all building materials
+        buildingsGroupRef.current.children.forEach(child => {
+          if (child.material) {
+            child.material.opacity = 0.9;
+          }
+        });
+        
+        // Highlight hovered building
+        if (intersects.length > 0) {
+          const hoveredBuilding = intersects[0].object;
+          if (hoveredBuilding.material) {
+            hoveredBuilding.material.opacity = 1.0;
+            mapRef.current.style.cursor = 'pointer';
+          }
+        } else {
+          mapRef.current.style.cursor = 'default';
+        }
+      }
+    };
+
     mapRef.current.addEventListener('click', handleClick);
+    mapRef.current.addEventListener('mousemove', handleMouseMove);
     
     return () => {
       if (mapRef.current) {
         mapRef.current.removeEventListener('click', handleClick);
+        mapRef.current.removeEventListener('mousemove', handleMouseMove);
       }
     };
   }, [isInitialized, buildings, onBuildingSelect]);
@@ -269,14 +288,8 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
   }, []);
 
   return (
-    <div className="three-map" style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <div ref={mapRef} className="map-container" style={{ 
-        width: '100%', 
-        height: '100%', 
-        minHeight: '600px',
-        background: '#87CEEB',
-        border: '2px solid red' // DEBUG: Red border to see the container
-      }} />
+    <div className="three-map">
+      <div ref={mapRef} className="map-container" />
       
       {!isInitialized && (
         <div className="map-loading">
@@ -284,37 +297,15 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
         </div>
       )}
 
-      {/* DEBUG: Show building count prominently */}
-      <div style={{
-        position: 'absolute',
-        top: '10px',
-        right: '10px',
-        background: 'rgba(255, 0, 0, 0.8)',
-        color: 'white',
-        padding: '20px',
-        borderRadius: '8px',
-        fontSize: '18px',
-        fontWeight: 'bold',
-        zIndex: 1000
-      }}>
-        🏢 Buildings: {buildings.length}<br/>
-        📊 Initialized: {isInitialized ? 'YES' : 'NO'}<br/>
-        📍 Container: {mapRef.current ? 'FOUND' : 'MISSING'}
-      </div>
 
-      {/* Building Info Display */}
-      {buildings.length > 0 && (
-        <div className="building-info">
-          <h3>3D Map - {targetArea}</h3>
-          <p>Buildings loaded: {buildings.length}</p>
-          <p>Highlighted: {highlightedBuildings.length}</p>
-        </div>
-      )}
+
+
 
       {/* Map Controls Info */}
       <div className="map-controls-info">
         <h4>Map Controls</h4>
         <p>• Drag to rotate • Scroll to zoom • Right-click to pan</p>
+        <p>• Click on buildings to see details</p>
       </div>
     </div>
   );
