@@ -2,6 +2,10 @@
 .query-panel {
   padding: 1.5rem;
   border-bottom: 1px solid #e9ecef;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
 }
 
 .panel-header h3 {
@@ -13,7 +17,7 @@
 
 .panel-subtitle {
   margin: 0 0 1.5rem 0;
-  color: #6c757d;
+  color: white;
   font-size: 0.9rem;
 }
 
@@ -75,10 +79,11 @@
 /* Filters Info */
 .filters-info {
   margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .filters-info h4 {
@@ -145,10 +150,11 @@
 /* Filter Result */
 .filter-result {
   margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #e8f5e8;
-  border: 1px solid #c3e6c3;
-  border-radius: 8px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.1);
 }
 
 .filter-result h4 {
@@ -225,10 +231,11 @@
 
 /* Help Section */
 .help-section {
-  padding: 1rem;
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 8px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 2px solid #f39c12;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(243, 156, 18, 0.1);
 }
 
 .help-section h4 {
