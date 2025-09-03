@@ -3,6 +3,8 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+  overflow-y: auto;
+  height: auto;
 }
 
 .dashboard-header {
@@ -38,8 +40,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-height: calc(100vh - 150px);
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
 }
 
 .right-panel {
