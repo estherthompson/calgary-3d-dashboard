@@ -105,6 +105,18 @@ const Dashboard = () => {
     setHighlightedBuildings([]);
   }, []);
 
+  // Load user projects
+  const loadUserProjects = useCallback(async () => {
+    if (!username) return;
+
+    try {
+      const response = await projectsAPI.getUserProjects(username);
+      setUserProjects(response.data.projects || []);
+    } catch (err) {
+      console.error('Failed to load user projects:', err);
+    }
+  }, [username]);
+
   // Handle project save
   const handleSaveProject = useCallback(async () => {
     if (!username || !selectedZone) return;
@@ -132,18 +144,6 @@ const Dashboard = () => {
       console.error('Failed to save project:', err);
     }
   }, [username, selectedZone, zoneData, buildings, highlightedBuildings, loadUserProjects]);
-
-  // Load user projects
-  const loadUserProjects = useCallback(async () => {
-    if (!username) return;
-
-    try {
-      const response = await projectsAPI.getUserProjects(username);
-      setUserProjects(response.data.projects || []);
-    } catch (err) {
-      console.error('Failed to load user projects:', err);
-    }
-  }, [username]);
 
   // Load projects when username changes
   useEffect(() => {
