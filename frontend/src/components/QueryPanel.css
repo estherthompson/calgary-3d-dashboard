@@ -1,0 +1,273 @@
+/* Query Panel Styles */
+.query-panel {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.panel-header h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.panel-subtitle {
+  margin: 0 0 1.5rem 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Query Form */
+.query-form {
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.query-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.query-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.query-input:disabled {
+  background: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.query-submit-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.query-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.query-submit-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Filters Info */
+.filters-info {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.filters-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.attributes-list {
+  margin-bottom: 1rem;
+}
+
+.attribute-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.attribute-item:last-child {
+  border-bottom: none;
+}
+
+.attribute-name {
+  font-weight: 600;
+  color: #495057;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+.attribute-desc {
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-align: right;
+  max-width: 60%;
+}
+
+.examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.example-item {
+  padding: 0.5rem 0.75rem;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #495057;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.example-item:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+/* Filter Result */
+.filter-result {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #e8f5e8;
+  border: 1px solid #c3e6c3;
+  border-radius: 8px;
+}
+
+.filter-result h4 {
+  margin: 0 0 1rem 0;
+  color: #155724;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.filter-details {
+  margin-bottom: 1rem;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #155724;
+}
+
+.filter-value {
+  color: #155724;
+  font-family: 'Courier New', monospace;
+  background: rgba(255,255,255,0.7);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.clear-btn,
+.save-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.clear-btn:disabled,
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Help Section */
+.help-section {
+  padding: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+}
+
+.help-section h4 {
+  margin: 0 0 0.75rem 0;
+  color: #856404;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.help-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #856404;
+  font-size: 0.85rem;
+}
+
+.help-list li {
+  margin-bottom: 0.25rem;
+}
+
+.help-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .query-panel {
+    padding: 1rem;
+  }
+  
+  .input-group {
+    flex-direction: column;
+  }
+  
+  .query-submit-btn {
+    width: 100%;
+  }
+  
+  .filter-actions {
+    flex-direction: column;
+  }
+}
