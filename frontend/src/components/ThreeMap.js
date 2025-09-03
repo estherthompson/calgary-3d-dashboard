@@ -13,7 +13,6 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
   const buildingsGroupRef = useRef(null);
   
   // State
-  const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize Three.js scene

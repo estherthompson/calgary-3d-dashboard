@@ -131,7 +131,7 @@ const Dashboard = () => {
     } catch (err) {
       console.error('Failed to save project:', err);
     }
-  }, [username, selectedZone, zoneData, buildings, highlightedBuildings]);
+  }, [username, selectedZone, zoneData, buildings, highlightedBuildings, loadUserProjects]);
 
   // Load user projects
   const loadUserProjects = useCallback(async () => {
