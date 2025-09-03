@@ -98,13 +98,6 @@ const Dashboard = () => {
     }
   }, [queryText, buildings]);
 
-  // Clear query and filters
-  const handleClearQuery = useCallback(() => {
-    setQueryText('');
-    setInterpretedFilter(null);
-    setHighlightedBuildings([]);
-  }, []);
-
   // Load user projects
   const loadUserProjects = useCallback(async () => {
     if (!username) return;
@@ -116,6 +109,13 @@ const Dashboard = () => {
       console.error('Failed to load user projects:', err);
     }
   }, [username]);
+
+  // Clear query and filters
+  const handleClearQuery = useCallback(() => {
+    setQueryText('');
+    setInterpretedFilter(null);
+    setHighlightedBuildings([]);
+  }, []);
 
   // Handle project save
   const handleSaveProject = useCallback(async () => {
