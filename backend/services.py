@@ -13,29 +13,11 @@ CACHE_TTL_SECONDS = 60 * 30  # 30 minutes
 
 # Target areas for the Calgary 3D Dashboard
 TARGET_AREAS = {
-    "beltline": {
-        "name": "Beltline",
-        "description": "Downtown adjacent residential and commercial area",
-        "bbox": [-114.085, 51.035, -114.065, 51.045],
-        "expected_buildings": "~400 buildings"
-    },
     "downtown": {
         "name": "Downtown Core",
         "description": "Central business district and high-rises",
         "bbox": [-114.075, 51.045, -114.055, 51.055],
         "expected_buildings": "~300 buildings"
-    },
-    "mission": {
-        "name": "Mission",
-        "description": "Historic residential neighborhood",
-        "bbox": [-114.095, 51.025, -114.075, 51.035],
-        "expected_buildings": "~250 buildings"
-    },
-    "auburn_bay": {
-        "name": "Auburn Bay",
-        "description": "Southeast suburban residential area",
-        "bbox": [-113.985, 50.985, -113.965, 50.995],
-        "expected_buildings": "~200 buildings"
     }
 }
 
@@ -172,7 +154,7 @@ BUILDING_ZONES = {
 }
 
 # Default target area
-DEFAULT_TARGET = "beltline"
+DEFAULT_TARGET = "downtown"
 
 # Simple in-memory cache for zone results (to avoid repeated API calls)
 ZONE_CACHE = {}
