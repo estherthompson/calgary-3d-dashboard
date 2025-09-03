@@ -155,6 +155,15 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
             transparent: false,
             opacity: 1.0
           });
+          
+          // Add hover effect
+          material.onBeforeCompile = (shader) => {
+            shader.uniforms.time = { value: 0 };
+            shader.fragmentShader = shader.fragmentShader.replace(
+              'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+              'gl_FragColor = vec4( outgoingLight, diffuseColor.a );'
+            );
+          };
 
           const mesh = new THREE.Mesh(geometry, material);
           
@@ -168,6 +177,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           mesh.castShadow = true;
           mesh.receiveShadow = true;
           mesh.userData.building = building;
+          mesh.userData.buildingIndex = index;
           
           buildingsGroupRef.current.add(mesh);
           createdCount++;
@@ -209,6 +219,45 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
       createBuildings();
     }
   }, [createBuildings, isInitialized]);
+
+  // Add click event handling for buildings
+  useEffect(() => {
+    if (!mapRef.current || !isInitialized) return;
+
+    const handleClick = (event) => {
+      event.preventDefault();
+      
+      const mouse = new THREE.Vector2();
+      const rect = mapRef.current.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, cameraRef.current);
+
+      if (buildingsGroupRef.current) {
+        const intersects = raycaster.intersectObjects(buildingsGroupRef.current.children, true);
+        
+        if (intersects.length > 0) {
+          const clickedBuilding = intersects[0].object;
+          const buildingIndex = clickedBuilding.userData.buildingIndex;
+          
+          if (buildingIndex !== undefined && buildings[buildingIndex]) {
+            console.log('Building clicked:', buildings[buildingIndex]);
+            onBuildingSelect(buildings[buildingIndex]);
+          }
+        }
+      }
+    };
+
+    mapRef.current.addEventListener('click', handleClick);
+    
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.removeEventListener('click', handleClick);
+      }
+    };
+  }, [isInitialized, buildings, onBuildingSelect]);
 
   // Cleanup on unmount
   useEffect(() => {

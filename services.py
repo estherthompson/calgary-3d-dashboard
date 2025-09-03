@@ -13,67 +13,16 @@ CACHE_TTL_SECONDS = 60 * 30  # 30 minutes
 
 # Target areas for the Calgary 3D Dashboard
 TARGET_AREAS = {
-    "beltline": {
-        "name": "Beltline",
-        "description": "Downtown adjacent residential and commercial area",
-        "bbox": [-114.085, 51.035, -114.065, 51.045],
-        "expected_buildings": "~400 buildings"
-    },
     "downtown": {
         "name": "Downtown Core",
         "description": "Central business district and high-rises",
         "bbox": [-114.075, 51.045, -114.055, 51.055],
         "expected_buildings": "~300 buildings"
-    },
-    "mission": {
-        "name": "Mission",
-        "description": "Historic residential neighborhood",
-        "bbox": [-114.095, 51.025, -114.075, 51.035],
-        "expected_buildings": "~250 buildings"
-    },
-    "auburn_bay": {
-        "name": "Auburn Bay",
-        "description": "Southeast suburban residential area",
-        "bbox": [-113.985, 50.985, -113.965, 50.995],
-        "expected_buildings": "~200 buildings"
     }
 }
 
 # New zone-based system for better performance
 BUILDING_ZONES = {
-    "beltline": {
-        "name": "Beltline District",
-        "zones": {
-            "beltline_zone_1": {
-                "name": "Beltline Zone 1 - 8th Avenue",
-                "description": "8th Avenue corridor with mixed-use buildings",
-                "bbox": [-114.090, 51.030, -114.070, 51.045],
-                "expected_buildings": "~150 buildings",
-                "center": [-114.080, 51.0375]
-            },
-            "beltline_zone_2": {
-                "name": "Beltline Zone 2 - 17th Avenue",
-                "description": "17th Avenue shopping and entertainment district",
-                "bbox": [-114.090, 51.045, -114.070, 51.060],
-                "expected_buildings": "~120 buildings",
-                "center": [-114.080, 51.0525]
-            },
-            "beltline_zone_3": {
-                "name": "Beltline Zone 3 - 4th Street",
-                "description": "4th Street residential and commercial mix",
-                "bbox": [-114.080, 51.030, -114.060, 51.045],
-                "expected_buildings": "~100 buildings",
-                "center": [-114.070, 51.0375]
-            },
-            "beltline_zone_4": {
-                "name": "Beltline Zone 4 - 1st Street",
-                "description": "1st Street corridor near downtown",
-                "bbox": [-114.070, 51.030, -114.050, 51.045],
-                "expected_buildings": "~80 buildings",
-                "center": [-114.060, 51.0375]
-            }
-        }
-    },
     "downtown": {
         "name": "Downtown District",
         "zones": {
@@ -99,33 +48,14 @@ BUILDING_ZONES = {
                 "center": [-114.060, 51.055]
             }
         }
-    },
-
-    "auburn_bay": {
-        "name": "Auburn Bay",
-        "zones": {
-            "auburn_bay_zone_1": {
-                "name": "Auburn Bay Zone 1 - Lake District",
-                "description": "Lakeside residential area",
-                "bbox": [-113.985, 50.985, -113.975, 50.990],
-                "expected_buildings": "~120 buildings",
-                "center": [-113.980, 50.9875]
-            },
-            "auburn_bay_zone_2": {
-                "name": "Auburn Bay Zone 2 - Suburban Core",
-                "description": "Central suburban development",
-                "bbox": [-113.985, 50.990, -113.975, 50.995],
-                "expected_buildings": "~80 buildings",
-                "center": [-113.980, 50.9925]
-            }
-        }
-    },
+    }
+},
 
 
 }
 
 # Default target area
-DEFAULT_TARGET = "beltline"
+DEFAULT_TARGET = "downtown"
 
 # Simple in-memory cache for zone results (to avoid repeated API calls)
 ZONE_CACHE = {}
