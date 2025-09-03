@@ -258,7 +258,10 @@ const Dashboard = () => {
 
           {/* Building Info - only show when building is selected */}
           {selectedBuilding && (
-            <BuildingInfo building={selectedBuilding} />
+            <BuildingInfo 
+              building={selectedBuilding} 
+              onClose={() => setSelectedBuilding(null)}
+            />
           )}
         </div>
 

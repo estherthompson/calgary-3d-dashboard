@@ -3,6 +3,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .panel-header {
@@ -11,11 +15,13 @@
   align-items: center;
   padding: 1.5rem 1.5rem 1rem 1.5rem;
   border-bottom: 1px solid #e9ecef;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 .panel-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: white;
   font-size: 1.3rem;
   font-weight: 600;
 }
@@ -27,20 +33,25 @@
 }
 
 .close-btn {
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 1.5rem;
-  color: #6c757d;
+  color: white;
   cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
+  padding: 0.5rem;
+  border-radius: 6px;
   transition: all 0.2s ease;
   line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-btn:hover {
-  background: #f8f9fa;
-  color: #495057;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 /* Building Content */
@@ -51,13 +62,16 @@
 }
 
 .building-id {
-  padding: 0.75rem 1rem;
-  background: #e9ecef;
-  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #495057;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Info Sections */
@@ -66,12 +80,23 @@
 }
 
 .info-section h4 {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 1rem 0;
   color: #2c3e50;
-  font-size: 1rem;
-  font-weight: 600;
-  padding-bottom: 0.25rem;
-  border-bottom: 2px solid #e9ecef;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #667eea;
+  position: relative;
+}
+
+.info-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 30px;
+  height: 3px;
+  background: #764ba2;
 }
 
 .info-grid {
@@ -83,26 +108,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid #f8f9fa;
+  background: #fafbfc;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.info-item:hover {
+  background: #f0f2f5;
+  transform: translateX(4px);
 }
 
 .info-item:last-child {
   border-bottom: none;
+  margin-bottom: 0;
 }
 
 .label {
-  font-weight: 600;
+  font-weight: 700;
   color: #495057;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .value {
   color: #2c3e50;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-align: right;
   max-width: 60%;
   word-break: break-word;
+  font-weight: 500;
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
 }
 
 /* Coordinates Info */
