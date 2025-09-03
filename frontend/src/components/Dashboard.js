@@ -122,7 +122,7 @@ const Dashboard = () => {
         };
       }
       // Height queries
-      else if (query.includes('height') || query.includes('tall') || query.includes('meters') || query.includes('metres')) {
+      else if (query.includes('height') || query.includes('tall') || query.includes('meters') || query.includes('metres') || query.includes('feet') || query.includes('ft')) {
         let heightValue = 50; // default
         let operator = '>';
         
@@ -132,21 +132,58 @@ const Dashboard = () => {
           heightValue = parseInt(heightMatch[1]);
           // Convert feet to meters if needed
           if (query.includes('feet') || query.includes('ft')) {
-            heightValue = heightValue * 0.3048;
+            heightValue = Math.round(heightValue * 0.3048 * 100) / 100; // Round to 2 decimal places
           }
         }
         
         // Check for "over", "above", "more than" vs "under", "below", "less than"
-        if (query.includes('under') || query.includes('below') || query.includes('less than') || query.includes('under')) {
+        if (query.includes('under') || query.includes('below') || query.includes('less than')) {
           operator = '<';
         }
         
+        // Debug: Log building height properties
+        console.log('Height filtering - looking for buildings with height properties');
+        console.log('Sample building properties:', buildings.slice(0, 3).map(b => ({
+          id: b.id,
+          height_m: b.properties?.height_m,
+          height_ft: b.properties?.height_ft,
+          floors: b.properties?.floors,
+          raw_height: b.properties?.height
+        })));
+        
         filteredBuildings = buildings.filter(b => {
-          if (!b.properties?.height_m) return false;
+          // Check multiple possible height properties and handle string formats
+          let heightInMeters = null;
+          
+          // Try to get height from various properties
+          if (b.properties?.height_m) {
+            heightInMeters = parseFloat(b.properties.height_m);
+          } else if (b.properties?.height_ft) {
+            heightInMeters = parseFloat(b.properties.height_ft) * 0.3048;
+          } else if (b.properties?.height) {
+            // Handle string formats like "11.5ft" or "3.5m"
+            const heightStr = b.properties.height.toString().toLowerCase();
+            if (heightStr.includes('ft') || heightStr.includes('feet')) {
+              const ftValue = parseFloat(heightStr.replace(/[^\d.]/g, ''));
+              if (!isNaN(ftValue)) {
+                heightInMeters = ftValue * 0.3048;
+              }
+            } else if (heightStr.includes('m') || heightStr.includes('meters') || heightStr.includes('metres')) {
+              const mValue = parseFloat(heightStr.replace(/[^\d.]/g, ''));
+              if (!isNaN(mValue)) {
+                heightInMeters = mValue;
+              }
+            }
+          }
+          
+          if (heightInMeters === null || isNaN(heightInMeters)) {
+            return false;
+          }
+          
           if (operator === '>') {
-            return b.properties.height_m > heightValue;
+            return heightInMeters > heightValue;
           } else {
-            return b.properties.height_m < heightValue;
+            return heightInMeters < heightValue;
           }
         });
         
@@ -156,6 +193,8 @@ const Dashboard = () => {
           value: heightValue,
           description: `Buildings ${operator === '>' ? 'taller' : 'shorter'} than ${heightValue} meters`
         };
+        
+        console.log(`Height filter applied: ${operator} ${heightValue}m, found ${filteredBuildings.length} buildings`);
       }
       // Floor count queries
       else if (query.includes('floor') || query.includes('floors') || query.includes('story') || query.includes('stories')) {
@@ -189,30 +228,69 @@ const Dashboard = () => {
           description: `Buildings with ${operator === '>' ? 'more' : 'fewer'} than ${floorValue} floors`
         };
       }
-      // Commercial/Residential queries
-      else if (query.includes('commercial') || query.includes('business') || query.includes('office')) {
-        filteredBuildings = buildings.filter(b => 
-          b.properties?.land_use === 'commercial' || 
-          b.properties?.land_use === 'business' ||
-          b.properties?.land_use === 'office'
-        );
+      // Land use queries
+      else if (query.includes('commercial') || query.includes('business') || query.includes('office') || query.includes('retail')) {
+        // Debug: Log land use properties
+        console.log('Land use filtering - looking for commercial buildings');
+        console.log('Sample building land use properties:', buildings.slice(0, 5).map(b => ({
+          id: b.id,
+          land_use: b.properties?.land_use,
+          building_type: b.properties?.building_type,
+          address: b.properties?.address
+        })));
+        
+        filteredBuildings = buildings.filter(b => {
+          const landUse = b.properties?.land_use?.toLowerCase() || '';
+          return landUse.includes('commercial') || 
+                 landUse.includes('business') || 
+                 landUse.includes('office') ||
+                 landUse.includes('retail') ||
+                 landUse.includes('shop') ||
+                 landUse.includes('store');
+        });
         filter = {
           attribute: 'land_use',
           operator: '=',
           value: 'commercial',
-          description: 'Commercial buildings'
+          description: 'Commercial buildings (business, office, retail)'
         };
-      } else if (query.includes('residential') || query.includes('home') || query.includes('house')) {
-        filteredBuildings = buildings.filter(b => 
-          b.properties?.land_use === 'residential' || 
-          b.properties?.land_use === 'home' ||
-          b.properties?.land_use === 'house'
-        );
+      } else if (query.includes('residential') || query.includes('home') || query.includes('house') || query.includes('apartment')) {
+        // Debug: Log land use properties
+        console.log('Land use filtering - looking for residential buildings');
+        console.log('Sample building land use properties:', buildings.slice(0, 5).map(b => ({
+          id: b.id,
+          land_use: b.properties?.land_use,
+          building_type: b.properties?.building_type,
+          address: b.properties?.address
+        })));
+        
+        filteredBuildings = buildings.filter(b => {
+          const landUse = b.properties?.land_use?.toLowerCase() || '';
+          return landUse.includes('residential') || 
+                 landUse.includes('home') || 
+                 landUse.includes('house') ||
+                 landUse.includes('apartment') ||
+                 landUse.includes('condo') ||
+                 landUse.includes('dwelling');
+        });
         filter = {
           attribute: 'land_use',
           operator: '=',
           value: 'residential',
-          description: 'Residential buildings'
+          description: 'Residential buildings (homes, apartments, condos)'
+        };
+      } else if (query.includes('mixed use') || query.includes('mixed-use') || query.includes('mixed')) {
+        filteredBuildings = buildings.filter(b => {
+          const landUse = b.properties?.land_use?.toLowerCase() || '';
+          return landUse.includes('mixed') || 
+                 landUse.includes('multi') ||
+                 landUse.includes('combination');
+        });
+        filter = {
+          attribute: 'land_use',
+          operator: '=',
+          value: 'mixed_use',
+          description: 'Mixed use buildings (residential + commercial)'
         };
       }
       // Default: no specific filter
@@ -291,9 +369,28 @@ const Dashboard = () => {
             b.properties?.building_type === savedFilter.value
           );
         } else if (savedFilter.attribute === 'land_use') {
-          filteredBuildings = buildings.filter(b => 
-            b.properties?.land_use === savedFilter.value
-          );
+          // Handle land use filtering with case-insensitive matching
+          filteredBuildings = buildings.filter(b => {
+            const buildingLandUse = b.properties?.land_use?.toLowerCase() || '';
+            const filterValue = savedFilter.value.toLowerCase();
+            
+            if (filterValue === 'commercial') {
+              return buildingLandUse.includes('commercial') || 
+                     buildingLandUse.includes('business') || 
+                     buildingLandUse.includes('office') ||
+                     buildingLandUse.includes('retail');
+            } else if (filterValue === 'residential') {
+              return buildingLandUse.includes('residential') || 
+                     buildingLandUse.includes('home') || 
+                     buildingLandUse.includes('house') ||
+                     buildingLandUse.includes('apartment');
+            } else if (filterValue === 'mixed_use') {
+              return buildingLandUse.includes('mixed') || 
+                     buildingLandUse.includes('multi') ||
+                     buildingLandUse.includes('combination');
+            }
+            return buildingLandUse === filterValue;
+          });
         }
         
         setHighlightedBuildings(filteredBuildings);
@@ -373,9 +470,13 @@ const Dashboard = () => {
           },
           examples: [
             "show buildings over 50 meters tall",
+            "show buildings over 100 feet tall",
+            "find buildings under 20 meters",
             "highlight high-rise buildings",
             "find buildings with more than 10 floors",
-            "show commercial buildings"
+            "show commercial buildings",
+            "show residential buildings",
+            "show mixed use buildings"
           ]
         });
       } catch (err) {

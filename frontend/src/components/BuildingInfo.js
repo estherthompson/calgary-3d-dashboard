@@ -116,6 +116,21 @@ const BuildingInfo = ({ building, onClose }) => {
               <span className="coord-value">{building.geometry.coordinates[0][0][1].toFixed(6)}</span>
             </div>
           </div>
+          
+          {/* Google Maps Button */}
+          <div className="maps-actions">
+            <button 
+              onClick={() => {
+                const lat = building.geometry.coordinates[0][0][1];
+                const lng = building.geometry.coordinates[0][0][0];
+                const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                window.open(googleMapsUrl, '_blank');
+              }}
+              className="google-maps-btn"
+            >
+              🗺️ View on Google Maps
+            </button>
+          </div>
         </div>
       </div>
     </div>
