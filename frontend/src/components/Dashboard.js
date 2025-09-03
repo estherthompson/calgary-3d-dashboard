@@ -435,20 +435,18 @@ const Dashboard = () => {
             selectedZone={selectedZone}
           />
 
-          {/* Query Panel - only show when zone is selected */}
-          {selectedZone && (
-            <QueryPanel 
-              onSubmit={handleQuerySubmit}
-              onClear={handleClearQuery}
-              onSave={handleSaveProject}
-              queryText={queryText}
-              setQueryText={setQueryText}
-              loading={loading}
-              interpretedFilter={interpretedFilter}
-              availableFilters={availableFilters}
-              canSave={!!username && buildings.length > 0}
-            />
-          )}
+          {/* Query Panel - always show for better UX */}
+          <QueryPanel 
+            onSubmit={handleQuerySubmit}
+            onClear={handleClearQuery}
+            onSave={handleSaveProject}
+            queryText={queryText}
+            setQueryText={setQueryText}
+            loading={loading}
+            interpretedFilter={interpretedFilter}
+            availableFilters={availableFilters}
+            canSave={!!username && buildings.length > 0}
+          />
 
           {/* Project Panel - only show when zone is selected */}
           {selectedZone && (
