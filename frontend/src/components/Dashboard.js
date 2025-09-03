@@ -75,23 +75,162 @@ const Dashboard = () => {
       setLoading(true);
       console.log('LLM Query submitted:', queryText);
       
-      // Example: highlight buildings over 50m height
-      if (queryText.toLowerCase().includes('tall') || queryText.toLowerCase().includes('height')) {
-        const tallBuildings = buildings.filter(b => 
-          b.properties?.height_m && b.properties.height_m > 50
+      const query = queryText.toLowerCase();
+      let filteredBuildings = [];
+      let filter = null;
+      
+      // Building type queries
+      if (query.includes('low rise') || query.includes('low-rise')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.building_type === 'low_rise'
         );
-        setHighlightedBuildings(tallBuildings);
-        setInterpretedFilter({
-          attribute: 'height_m',
-          operator: '>',
-          value: 50,
-          description: 'Buildings taller than 50 meters'
-        });
-        console.log(`Highlighted ${tallBuildings.length} tall buildings`);
-      } else {
-        setHighlightedBuildings([]);
-        setInterpretedFilter(null);
+        filter = {
+          attribute: 'building_type',
+          operator: '=',
+          value: 'low_rise',
+          description: 'Low rise buildings (2-4 floors)'
+        };
+      } else if (query.includes('mid rise') || query.includes('mid-rise') || query.includes('medium rise')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.building_type === 'mid_rise'
+        );
+        filter = {
+          attribute: 'building_type',
+          operator: '=',
+          value: 'mid_rise',
+          description: 'Mid rise buildings (5-9 floors)'
+        };
+      } else if (query.includes('high rise') || query.includes('high-rise') || query.includes('tall')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.building_type === 'high_rise'
+        );
+        filter = {
+          attribute: 'building_type',
+          operator: '=',
+          value: 'high_rise',
+          description: 'High rise buildings (10+ floors)'
+        };
+      } else if (query.includes('single story') || query.includes('single-story') || query.includes('one story')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.building_type === 'single_story'
+        );
+        filter = {
+          attribute: 'building_type',
+          operator: '=',
+          value: 'single_story',
+          description: 'Single story buildings'
+        };
       }
+      // Height queries
+      else if (query.includes('height') || query.includes('tall') || query.includes('meters') || query.includes('metres')) {
+        let heightValue = 50; // default
+        let operator = '>';
+        
+        // Extract height value from query
+        const heightMatch = query.match(/(\d+)\s*(?:meters?|metres?|m|feet?|ft)/i);
+        if (heightMatch) {
+          heightValue = parseInt(heightMatch[1]);
+          // Convert feet to meters if needed
+          if (query.includes('feet') || query.includes('ft')) {
+            heightValue = heightValue * 0.3048;
+          }
+        }
+        
+        // Check for "over", "above", "more than" vs "under", "below", "less than"
+        if (query.includes('under') || query.includes('below') || query.includes('less than') || query.includes('under')) {
+          operator = '<';
+        }
+        
+        filteredBuildings = buildings.filter(b => {
+          if (!b.properties?.height_m) return false;
+          if (operator === '>') {
+            return b.properties.height_m > heightValue;
+          } else {
+            return b.properties.height_m < heightValue;
+          }
+        });
+        
+        filter = {
+          attribute: 'height_m',
+          operator: operator,
+          value: heightValue,
+          description: `Buildings ${operator === '>' ? 'taller' : 'shorter'} than ${heightValue} meters`
+        };
+      }
+      // Floor count queries
+      else if (query.includes('floor') || query.includes('floors') || query.includes('story') || query.includes('stories')) {
+        let floorValue = 5; // default
+        let operator = '>';
+        
+        // Extract floor count from query
+        const floorMatch = query.match(/(\d+)\s*(?:floor|story)/i);
+        if (floorMatch) {
+          floorValue = parseInt(floorMatch[1]);
+        }
+        
+        // Check for "over", "above", "more than" vs "under", "below", "less than"
+        if (query.includes('under') || query.includes('below') || query.includes('less than')) {
+          operator = '<';
+        }
+        
+        filteredBuildings = buildings.filter(b => {
+          if (!b.properties?.floors) return false;
+          if (operator === '>') {
+            return b.properties.floors > floorValue;
+          } else {
+            return b.properties.floors < floorValue;
+          }
+        });
+        
+        filter = {
+          attribute: 'floors',
+          operator: operator,
+          value: floorValue,
+          description: `Buildings with ${operator === '>' ? 'more' : 'fewer'} than ${floorValue} floors`
+        };
+      }
+      // Commercial/Residential queries
+      else if (query.includes('commercial') || query.includes('business') || query.includes('office')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.land_use === 'commercial' || 
+          b.properties?.land_use === 'business' ||
+          b.properties?.land_use === 'office'
+        );
+        filter = {
+          attribute: 'land_use',
+          operator: '=',
+          value: 'commercial',
+          description: 'Commercial buildings'
+        };
+      } else if (query.includes('residential') || query.includes('home') || query.includes('house')) {
+        filteredBuildings = buildings.filter(b => 
+          b.properties?.land_use === 'residential' || 
+          b.properties?.land_use === 'home' ||
+          b.properties?.land_use === 'house'
+        );
+        filter = {
+          attribute: 'land_use',
+          operator: '=',
+          value: 'residential',
+          description: 'Residential buildings'
+        };
+      }
+      // Default: no specific filter
+      else {
+        filteredBuildings = [];
+        filter = null;
+      }
+      
+      setHighlightedBuildings(filteredBuildings);
+      setInterpretedFilter(filter);
+      
+      if (filter) {
+        console.log(`Query interpreted: ${filter.description}`);
+        console.log(`Highlighted ${filteredBuildings.length} buildings`);
+      } else {
+        console.log('No specific filter found for query');
+      }
+      
     } catch (err) {
       console.error('Failed to process query:', err);
     } finally {
@@ -125,13 +264,39 @@ const Dashboard = () => {
         setInterpretedFilter(savedFilter);
         
         // Apply the filter to highlight buildings
-        if (savedFilter.attribute === 'height_m' && savedFilter.operator === '>') {
-          const filteredBuildings = buildings.filter(b => 
-            b.properties?.height_m && b.properties.height_m > savedFilter.value
+        let filteredBuildings = [];
+        
+        if (savedFilter.attribute === 'height_m') {
+          if (savedFilter.operator === '>') {
+            filteredBuildings = buildings.filter(b => 
+              b.properties?.height_m && b.properties.height_m > savedFilter.value
+            );
+          } else if (savedFilter.operator === '<') {
+            filteredBuildings = buildings.filter(b => 
+              b.properties?.height_m && b.properties.height_m < savedFilter.value
+            );
+          }
+        } else if (savedFilter.attribute === 'floors') {
+          if (savedFilter.operator === '>') {
+            filteredBuildings = buildings.filter(b => 
+              b.properties?.floors && b.properties.floors > savedFilter.value
+            );
+          } else if (savedFilter.operator === '<') {
+            filteredBuildings = buildings.filter(b => 
+              b.properties?.floors && b.properties.floors < savedFilter.value
+            );
+          }
+        } else if (savedFilter.attribute === 'building_type') {
+          filteredBuildings = buildings.filter(b => 
+            b.properties?.building_type === savedFilter.value
           );
-          setHighlightedBuildings(filteredBuildings);
+        } else if (savedFilter.attribute === 'land_use') {
+          filteredBuildings = buildings.filter(b => 
+            b.properties?.land_use === savedFilter.value
+          );
         }
-        // Add more filter types as needed
+        
+        setHighlightedBuildings(filteredBuildings);
         
         // Set the query text
         if (project.query_text) {

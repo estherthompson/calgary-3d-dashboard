@@ -41,7 +41,7 @@ const ProjectPanel = ({
             <div
               key={project.id}
               className={`project-item ${currentProject?.id === project.id ? 'active' : ''}`}
-              onClick={() => onLoadProject(project.id)}
+              onClick={() => onLoadProject(project)}
             >
               <div className="project-header">
                 <h4 className="project-name">{project.name}</h4>
