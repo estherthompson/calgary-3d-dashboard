@@ -144,7 +144,7 @@ const Dashboard = () => {
     } catch (err) {
       console.error('Failed to save project:', err);
     }
-  }, [username, selectedZone, zoneData, buildings, highlightedBuildings]);
+  }, [username, selectedZone, zoneData, buildings, highlightedBuildings, loadUserProjects]);
 
   // Load projects when username changes
   useEffect(() => {

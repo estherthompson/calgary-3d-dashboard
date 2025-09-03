@@ -129,7 +129,7 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
       // Clear existing buildings
       buildingsGroupRef.current.clear();
 
-      let createdCount = 0;
+
       buildings.forEach((building, index) => {
         try {
           // Get building properties
@@ -171,7 +171,6 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           mesh.userData.buildingIndex = index;
           
           buildingsGroupRef.current.add(mesh);
-          createdCount++;
 
 
 
@@ -207,11 +206,13 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
   useEffect(() => {
     if (!mapRef.current || !isInitialized) return;
 
+    const mapElement = mapRef.current; // Copy ref to variable
+
     const handleClick = (event) => {
       event.preventDefault();
       
       const mouse = new THREE.Vector2();
-      const rect = mapRef.current.getBoundingClientRect();
+      const rect = mapElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -234,10 +235,10 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
     };
 
     const handleMouseMove = (event) => {
-      if (!mapRef.current || !isInitialized) return;
+      if (!mapElement || !isInitialized) return;
       
       const mouse = new THREE.Vector2();
-      const rect = mapRef.current.getBoundingClientRect();
+      const rect = mapElement.getBoundingClientRect();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -259,21 +260,21 @@ const ThreeMap = ({ buildings, highlightedBuildings = [], onBuildingSelect, targ
           const hoveredBuilding = intersects[0].object;
           if (hoveredBuilding.material) {
             hoveredBuilding.material.opacity = 1.0;
-            mapRef.current.style.cursor = 'pointer';
+            mapElement.style.cursor = 'pointer';
           }
         } else {
-          mapRef.current.style.cursor = 'default';
+          mapElement.style.cursor = 'default';
         }
       }
     };
 
-    mapRef.current.addEventListener('click', handleClick);
-    mapRef.current.addEventListener('mousemove', handleMouseMove);
+    mapElement.addEventListener('click', handleClick);
+    mapElement.addEventListener('mousemove', handleMouseMove);
     
     return () => {
-      if (mapRef.current) {
-        mapRef.current.removeEventListener('click', handleClick);
-        mapRef.current.removeEventListener('mousemove', handleMouseMove);
+      if (mapElement) {
+        mapElement.removeEventListener('click', handleClick);
+        mapElement.removeEventListener('mousemove', handleMouseMove);
       }
     };
   }, [isInitialized, buildings, onBuildingSelect]);
