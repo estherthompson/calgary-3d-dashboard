@@ -126,15 +126,8 @@ export const apiUtils = {
   
   // Get building color based on type
   getBuildingColor: (type, isHighlighted = false) => {
-    if (isHighlighted) return '#ff6b6b'; // Highlight color
-    
-    const colors = {
-      'single_story': '#FFB6C1', // Light pink
-      'low_rise': '#87CEEB',     // Sky blue
-      'mid_rise': '#98FB98',     // Pale green
-      'high_rise': '#DDA0DD',    // Plum
-    };
-    return colors[type] || '#F0E68C'; // Khaki for unknown types
+    if (isHighlighted) return '#ff6b6b'; // Bright red for highlighted buildings
+    return '#4A90E2'; // Same blue color for all regular buildings
   },
 };
 

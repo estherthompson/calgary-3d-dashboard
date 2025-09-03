@@ -24,6 +24,7 @@ const Dashboard = () => {
 
   // State for user and projects
   const [username, setUsername] = useState('');
+  const [tempUsername, setTempUsername] = useState('');
   const [userProjects, setUserProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
 
@@ -182,8 +183,42 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Calgary 3D Building Dashboard</h1>
-        <p>Explore Calgary's buildings in 3D with AI-powered analysis</p>
+        <div className="header-content">
+          <div className="header-text">
+            <h1>Calgary 3D Building Dashboard</h1>
+            <p>Explore Calgary's buildings in 3D with AI-powered analysis</p>
+          </div>
+          <div className="user-section">
+            {!username ? (
+              <div className="username-input-section">
+                <input
+                  type="text"
+                  placeholder="Enter username"
+                  value={tempUsername}
+                  onChange={(e) => setTempUsername(e.target.value)}
+                  className="username-input"
+                />
+                <button 
+                  onClick={() => setUsername(tempUsername)}
+                  className="set-username-btn"
+                  disabled={!tempUsername.trim()}
+                >
+                  Set Username
+                </button>
+              </div>
+            ) : (
+              <div className="user-info">
+                <span className="username-display">User: {username}</span>
+                <button 
+                  onClick={() => setUsername('')}
+                  className="change-username-btn"
+                >
+                  Change
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       <div className="dashboard-content">
@@ -244,10 +279,7 @@ const Dashboard = () => {
                 <div className="zone-examples">
                   <h3>Available Zones:</h3>
                   <ul>
-                    <li><strong>Beltline:</strong> 8th Ave, 17th Ave, Residential Core</li>
                     <li><strong>Downtown:</strong> Stephen Avenue, Financial District, East Village</li>
-                    <li><strong>Mission:</strong> 4th Street, Residential</li>
-                    <li><strong>Auburn Bay:</strong> Lake District, Suburban Core</li>
                   </ul>
                 </div>
                 <p className="performance-note">

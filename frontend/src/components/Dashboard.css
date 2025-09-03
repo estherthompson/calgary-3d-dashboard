@@ -13,6 +13,84 @@
   margin-bottom: 30px;
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.header-text {
+  text-align: left;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.username-input-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.username-input {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.set-username-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.set-username-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.set-username-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.username-display {
+  color: white;
+  font-weight: 500;
+}
+
+.change-username-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.change-username-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .dashboard-header h1 {
   margin: 0 0 10px 0;
   font-size: 2.5rem;
@@ -282,4 +360,21 @@
 .error-dismiss:hover {
   background: #e53e3e;
   transform: translateY(-1px);
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .user-section {
+    justify-content: center;
+  }
+  
+  .username-input-section {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
